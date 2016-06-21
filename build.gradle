@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.8.2'
+}
+
+ext.packages = 1
+ext.tests = 1000
+
+task createTests << {
+			def packageName = "gradletest"
+			(1..tests).each { classCounter ->
+					def testClassName = "Gradle${classCounter}Test"
+					copy {
+							from 'src/templates'
+							into 'src/test/java'
+							expand([packageName: packageName, testClassName: testClassName])
+							rename '(.*).java', packageName + '/' + testClassName + '.java'
+							include 'SampleTest.java'
+					}
+			}
+}
